@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.demo.ui.theme.DemoTheme
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
@@ -43,10 +45,10 @@ fun AdaptiveApp() {
 
     BoxWithConstraints {
         when {
-            maxWidth < 480.dp -> { // Small screen (phones)
+            maxWidth <= 480.dp || maxHeight <= 480.dp-> { // Small screen (phones)
                 SmallScreenLayout(isLandscape)
             }
-            maxWidth >= 480.dp && maxWidth < 768.dp -> { // Medium screen (tablets)
+            maxWidth > 480.dp  && maxHeight <= 1024.dp-> { // Medium screen (tablets)
                 MediumScreenLayout(isLandscape)
             }
             else -> { // Large screen (tablets, foldables)
@@ -60,73 +62,167 @@ fun AdaptiveApp() {
 
 @Composable
 fun SmallScreenLayout(isLandscape: Boolean) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Small Screen Layout", fontSize = 20.sp, modifier = Modifier.padding(16.dp))
-        if (isLandscape) {
-            Row {
-                ResponsiveImage()
-                ResponsiveBoxes(isLandscape)
-            }
-        } else{
+    val scrollState = rememberScrollState()
+    if (!isLandscape) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Small Screen Layout", fontSize = 20.sp, modifier = Modifier.padding(16.dp))
             ResponsiveImage()
             ResponsiveBoxes(isLandscape)
+            ResponsiveButton()
+            ResponsiveList()
+
         }
-        ResponsiveButton()
-        ResponsiveList()
+    } else{
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            // Left pane
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.2f)
+                    .padding(8.dp)
+            ) {
+                items((1..20).map { "Item $it" }) { item ->
+                    Text(text = item, fontSize = 18.sp, modifier = Modifier.padding(8.dp))
+                }
+            }
+
+            // Right pane
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.8f)
+                    .padding(8.dp)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Small Screen Landscape Mode", fontSize = 20.sp, modifier = Modifier.padding(16.dp))
+                Row{
+                    ResponsiveImage()
+                    ResponsiveBoxes(isLandscape)
+                }
+                ResponsiveButton()
+            }
+        }
     }
 }
 
 @Composable
 fun MediumScreenLayout(isLandscape: Boolean) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Medium Screen Layout", fontSize = 24.sp, modifier = Modifier.padding(16.dp))
-        if (isLandscape) {
-            Row {
-                ResponsiveImage()
-                ResponsiveBoxes(isLandscape)
-            }
-        } else{
+    val scrollState = rememberScrollState()
+    if (!isLandscape) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Medium Screen Layout", fontSize = 24.sp, modifier = Modifier.padding(16.dp))
             ResponsiveImage()
             ResponsiveBoxes(isLandscape)
+            ResponsiveButton()
+            ResponsiveList()
         }
-        ResponsiveButton()
-        ResponsiveList()
+    } else{
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            // Left pane
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.2f)
+                    .padding(8.dp)
+            ) {
+                items((1..20).map { "Item $it" }) { item ->
+                    Text(text = item, fontSize = 18.sp, modifier = Modifier.padding(8.dp))
+                }
+            }
+
+            // Right pane
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.8f)
+                    .padding(8.dp)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Medium Screen Landscape Mode", fontSize = 24.sp, modifier = Modifier.padding(16.dp))
+                Row{
+                    ResponsiveImage()
+                    ResponsiveBoxes(isLandscape)
+                }
+                ResponsiveButton()
+            }
+        }
     }
 }
 
 @Composable
 fun LargeScreenLayout(isLandscape: Boolean) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Large Screen Layout", fontSize = 28.sp)
-        if (isLandscape) {
-            Row {
-                ResponsiveImage()
-                ResponsiveBoxes(isLandscape)
-            }
-        } else{
+    val scrollState = rememberScrollState()
+    if (!isLandscape) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Large Screen Layout", fontSize = 28.sp)
             ResponsiveImage()
             ResponsiveBoxes(isLandscape)
+            ResponsiveButton()
+            ResponsiveList()
         }
+    } else{
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            // Left pane
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.2f)
+                    .padding(8.dp)
+            ) {
+                items((1..20).map { "Item $it" }) { item ->
+                    Text(text = item, fontSize = 18.sp, modifier = Modifier.padding(8.dp))
+                }
+            }
 
-        ResponsiveButton()
-        ResponsiveList()
+            // Right pane
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.8f)
+                    .padding(8.dp)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Medium Screen Landscape Mode", fontSize = 28.sp, modifier = Modifier.padding(32.dp))
+                Row{
+                    ResponsiveImage()
+                    ResponsiveBoxes(isLandscape)
+                }
+                ResponsiveButton()
+            }
+        }
     }
 }
 
